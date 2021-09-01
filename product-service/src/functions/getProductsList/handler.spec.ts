@@ -1,4 +1,5 @@
 import { getProductsList } from './handler';
+import { OK } from '../../constants/responseCodes';
 
 const MOCK_PRODUCTS = [
   {
@@ -72,7 +73,7 @@ jest.mock('@libs/lambda');
 describe('Test suite for getProductsList function', () => {
   it('Should return status code 200', async () => {
     const { statusCode } = await getProductsList();
-    expect(statusCode).toBe(200);
+    expect(statusCode).toBe(OK);
   });
 
   it('Should return lenght of products: 8', async () => {

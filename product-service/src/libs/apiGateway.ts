@@ -10,9 +10,9 @@ const HEADERS = {
   "Access-Control-Allow-Methods": "*"
 };
 
-export const formatJSONResponse = (response: Record<string, unknown>) => {
+export const formatJSONResponse = (response: Record<string, unknown>, code: number = 200) => {
   return {
-    statusCode: 200,
+    statusCode: code,
     headers: HEADERS,
     body: JSON.stringify(response)
   }

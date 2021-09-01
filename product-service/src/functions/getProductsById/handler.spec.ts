@@ -1,4 +1,6 @@
 import { getProductsById } from './handler';
+import { OK, NOT_FOUND } from '../../constants/responseCodes';
+import { responseMessages } from '../../constants/responseMessages';
 
 const MOCK_PRODUCT =
   {
@@ -18,13 +20,15 @@ describe('Test suite for getProductsById function', () => {
   it('Should return status code 200', async () => {
     const mockId = createMockEvent("4");
     const { statusCode } = await getProductsById(mockId);
-    expect(statusCode).toBe(200);
+    expect(statusCode).toBe(OK);
   });
 
-  it('Should return empty object', async () => {
+  it('Should return 404 and error message if product not found', async () => {
     const mockId = createMockEvent("13");
-    const { body } = await getProductsById(mockId);
-    expect(body).toEqual("{}");
+    const { body, statusCode } = await getProductsById(mockId);
+    const { message } = JSON.parse(body);
+    expect(message).toBe(responseMessages[NOT_FOUND]);
+    expect(statusCode).toBe(NOT_FOUND);
   });  
 
   it('Should return the same product', async () => {
