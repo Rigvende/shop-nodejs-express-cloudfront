@@ -17,18 +17,14 @@ const dbOptions = {
     ssl: {
         rejectUnauthorized: false
     },
-    connectionTimeoutMillis: 5000
+    connectionTimeoutMillis: 7000
 };
 
 export class DbConnect {
-    private static client: Client;
-
-    private constructor() {}
+    static client: Client;
 
     public static getClient() {
-        if (!DbConnect.client) {
-            DbConnect.client = new Client(dbOptions);
-        }
+        DbConnect.client = new Client(dbOptions);
         return DbConnect.client;
     }
 
