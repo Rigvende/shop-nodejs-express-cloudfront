@@ -44,7 +44,7 @@ export class ProductRepository {
 
       await client.query('commit');
 
-      return newProduct.rows[0];
+      return newProductId;
     } catch (e) {
       await client.query('rollback');
       throw e;
