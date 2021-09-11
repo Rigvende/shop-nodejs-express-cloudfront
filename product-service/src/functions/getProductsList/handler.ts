@@ -5,8 +5,11 @@ import { INTERNAL_SERVER_ERROR } from '../../constants/responseCodes';
 import { responseMessages } from '../../constants/responseMessages';
 import { DbConnect } from '../../db/dbConnect';
 import { ProductService} from '../../services/productService';
+import { log } from '../../utils/logger';
 
-export const getProductsList = async () => {
+export const getProductsList = async (event) => {
+  log(event);
+
   try {
     const client = DbConnect.getClient();
     await DbConnect.connect();
