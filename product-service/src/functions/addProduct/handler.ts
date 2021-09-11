@@ -1,7 +1,7 @@
 import 'source-map-support/register';
 import { formatJSONResponse } from '@libs/apiGateway';
 import { middyfy } from '@libs/lambda';
-import { NOT_FOUND, BAD_REQUEST, INTERNAL_SERVER_ERROR, OK, SUCCESS } from '../../constants/responseCodes';
+import { NOT_FOUND, BAD_REQUEST, INTERNAL_SERVER_ERROR, SUCCESS } from '../../constants/responseCodes';
 import { responseMessages } from '../../constants/responseMessages';
 import { DbConnect } from '../../db/dbConnect';
 import { ProductService} from '../../services/productService';
