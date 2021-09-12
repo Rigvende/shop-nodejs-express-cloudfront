@@ -1,8 +1,8 @@
 {
   "body": {
-    "title": "newTitle",
+    "title": null,
     "description": "newDescription",
     "price": 10,
-    "count": 5
+    "count": "f"
   }
 }

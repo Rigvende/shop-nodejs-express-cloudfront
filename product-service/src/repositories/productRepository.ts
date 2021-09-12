@@ -22,14 +22,15 @@ export class ProductRepository {
   }
 
   async addProduct(client: Client, product) {
-    const { title, description, price, url } = product;
-
+    const { title, description, price, count, url } = product;
+    const replacedUrl = url || '';
+    
     try {
       await client.query('begin');
 
       const addProductResult = await client.query(`
-        INSERT INTO products (title, description, price, url)
-        VALUES ('${title}', '${description}', ${price}, '${url}')
+        INSERT INTO products (title, description, price, url) 
+        VALUES ('${title}', '${description}', ${price}, '${replacedUrl}') 
         RETURNING id
       `);
 
@@ -37,7 +38,7 @@ export class ProductRepository {
 
       await client.query(`
         INSERT INTO stocks (product_id, count)
-        VALUES ('${newProductId}', 1)
+        VALUES ('${newProductId}', '${count}')
       `);
       
       await client.query('commit');

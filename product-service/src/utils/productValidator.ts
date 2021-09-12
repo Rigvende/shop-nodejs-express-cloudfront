@@ -5,6 +5,7 @@ interface IProduct {
   description: string;
   price: number;
   url?: string;
+  count: number;
 }
 
 export const validateProduct = (product: IProduct) => {
@@ -25,6 +26,10 @@ export const validateProduct = (product: IProduct) => {
       required: true,
     },
     price: {
+      type: 'number',
+      required: true,
+    },
+    count: {
       type: 'number',
       required: true,
     },
@@ -58,9 +63,9 @@ export const validateProduct = (product: IProduct) => {
         continue;
       }
     }
-
-    return validationErrors;
   }
+
+  return validationErrors;
 };
 
 export const isValidId = (id: string) => ID_REGEX.test(id);
