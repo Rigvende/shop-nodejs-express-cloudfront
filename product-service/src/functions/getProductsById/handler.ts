@@ -6,6 +6,7 @@ import { responseMessages } from '../../constants/responseMessages';
 import { DbConnect } from '../../db/dbConnect';
 import { ProductService} from '../../services/productService';
 import { log } from '../../utils/logger';
+import { isValidId } from '../../utils/productValidator';
 
 export const getProductsById = async (event) => {
   log(event);
@@ -14,10 +15,15 @@ export const getProductsById = async (event) => {
     const client = DbConnect.getClient();
     await DbConnect.connect();
 
-    const productService = new ProductService();
-    const product = await productService.getProductsByIdAsync(client, event.pathParameters.productId);
+    let product = null;
+    const id = event.pathParameters.productId;
+    
+    if (isValidId(id)) {      
+      const productService = new ProductService();
+      product = await productService.getProductsByIdAsync(client, id);
+    }    
 
-    return product
+    return product && product.length > 0
       ? formatJSONResponse({ product })
       : formatJSONResponse({ message: responseMessages[NOT_FOUND] }, NOT_FOUND);
   } catch (e) {

@@ -1,3 +1,5 @@
+import { ID_REGEX } from '../constants/regexp';
+
 interface IProduct {
   title: string;
   description: string;
@@ -60,3 +62,5 @@ export const validateProduct = (product: IProduct) => {
     return validationErrors;
   }
 };
+
+export const isValidId = (id: string) => ID_REGEX.test(id);

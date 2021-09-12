@@ -39,9 +39,7 @@ export class ProductRepository {
         INSERT INTO stocks (product_id, count)
         VALUES ('${newProductId}', 1)
       `);
-
-      const newProduct = await this.getProductsById(client, newProductId);
-
+      
       await client.query('commit');
 
       return newProductId;
