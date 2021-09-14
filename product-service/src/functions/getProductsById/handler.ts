@@ -23,7 +23,7 @@ export const getProductsById = async (event) => {
       product = await productService.getProductsByIdAsync(client, id);
     }    
 
-    return product && product.length > 0
+    return product
       ? formatJSONResponse({ product })
       : formatJSONResponse({ message: responseMessages[NOT_FOUND] }, NOT_FOUND);
   } catch (e) {
