@@ -2,10 +2,17 @@ import type { AWS } from '@serverless/typescript';
 
 import getProductsList from '@functions/getProductsList';
 import getProductsById from '@functions/getProductsById';
+import addProduct from '@functions/addProduct';
+import dotenv from 'dotenv';
+
+dotenv.config({
+  path: __dirname + './env'
+});
 
 const serverlessConfiguration: AWS = {
   service: 'product-service',
   frameworkVersion: '2',
+  useDotenv: true,
   custom: {
     webpack: {
       webpackConfig: './webpack.config.js',
@@ -23,11 +30,15 @@ const serverlessConfiguration: AWS = {
     },
     environment: {
       AWS_NODEJS_CONNECTION_REUSE_ENABLED: '1',
+      PG_HOST: '${env:PG_HOST}',
+      PG_PORT: '${env:PG_PORT}',
+      PG_DATABASE: '${env:PG_DATABASE}',
+      PG_USERNAME: '${env:PG_USERNAME}',
+      PG_PASSWORD: '${env:PG_PASSWORD}'
     },
     lambdaHashingVersion: '20201221',
   },
-  // import the function via paths
-  functions: { getProductsList, getProductsById },
+  functions: { getProductsList, getProductsById, addProduct },
 };
 
 module.exports = serverlessConfiguration;

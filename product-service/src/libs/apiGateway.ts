@@ -7,7 +7,8 @@ export type ValidatedEventAPIGatewayProxyEvent<S> = Handler<ValidatedAPIGatewayP
 const HEADERS = {
   "Access-Control-Allow-Headers": "*",
   "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Methods": "*"
+  "Access-Control-Allow-Methods": "*",
+  'Access-Control-Allow-Credentials': true
 };
 
 export const formatJSONResponse = (response: Record<string, unknown>, code: number = 200) => {

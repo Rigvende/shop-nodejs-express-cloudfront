@@ -1,0 +1,8 @@
+{
+  "body": {
+    "title": "newTitle",
+    "description": "newDescription",
+    "price": 10,
+    "count": 5
+  }
+}
