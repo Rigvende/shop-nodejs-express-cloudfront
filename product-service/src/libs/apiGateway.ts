@@ -1,8 +1,4 @@
-import type { APIGatewayProxyEvent, APIGatewayProxyResult, Handler } from "aws-lambda"
-import type { FromSchema } from "json-schema-to-ts";
-
-type ValidatedAPIGatewayProxyEvent<S> = Omit<APIGatewayProxyEvent, 'body'> & { body: FromSchema<S> }
-export type ValidatedEventAPIGatewayProxyEvent<S> = Handler<ValidatedAPIGatewayProxyEvent<S>, APIGatewayProxyResult>
+import { OK } from '../constants/responseCodes';
 
 const HEADERS = {
   "Access-Control-Allow-Headers": "*",
@@ -11,7 +7,7 @@ const HEADERS = {
   'Access-Control-Allow-Credentials': true
 };
 
-export const formatJSONResponse = (response: Record<string, unknown>, code: number = 200) => {
+export const formatJSONResponse = (response: Record<string, unknown>, code: number = OK) => {
   return {
     statusCode: code,
     headers: HEADERS,
