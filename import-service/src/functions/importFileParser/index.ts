@@ -9,7 +9,7 @@ export default {
         event: 's3:ObjectCreated:*',
         rules: [
           {
-            prefix: 'parsed/'     
+            prefix: 'uploaded/'     
           }
         ],
         existing: true

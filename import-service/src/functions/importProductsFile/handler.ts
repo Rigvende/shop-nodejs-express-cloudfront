@@ -6,31 +6,28 @@ import { BAD_REQUEST, INTERNAL_SERVER_ERROR } from '../../constants/responseCode
 import { responseMessages } from '../../constants/responseMessages';
 
 const AWS = require('aws-sdk');
-const { BUCKET } = process.env;
+const { BUCKET, REGION } = process.env;
 
-const importProductsFile = async (event) => {
+export const importProductsFile = async (event) => {
   log(event);
 
   if (!event.querystrings || !event.querystrings.name) {
     return formatJSONResponse({ message: responseMessages[BAD_REQUEST] }, BAD_REQUEST);
   }
 
-  const S3 = new AWS.S3({ region: 'eu-west-1' });
-  const catalogPath = `uploaded/${event.querystrings.name}`;
+  const S3 = new AWS.S3({ region: REGION });
+  const OBJECT_KEY = `uploaded/${event.querystrings.name}`;
 
   const params = {
     Bucket: BUCKET,
-    Key: catalogPath,
+    Key: OBJECT_KEY,
     Expires: 60,
     ContentType: 'text/csv'
   };
 
   try {
-    S3.getSignedUrl('putObject', params, (error, url) => {
-      return error 
-      ? formatJSONResponse({ message: responseMessages[BAD_REQUEST] }, BAD_REQUEST)
-      : formatJSONResponse({ url });
-    });    
+    const url = await S3.getSignedUrlPromise('putObject', params);
+    return formatJSONResponse({ url });    
   } catch (e) {
     return formatJSONResponse({ 
         message: responseMessages[INTERNAL_SERVER_ERROR] 
