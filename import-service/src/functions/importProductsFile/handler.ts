@@ -11,12 +11,12 @@ const { BUCKET, REGION } = process.env;
 export const importProductsFile = async (event) => {
   log(event);
 
-  if (!event.querystrings || !event.querystrings.name) {
+  if (!event.queryStringParameters || !event.queryStringParameters.name) {
     return formatJSONResponse({ message: responseMessages[BAD_REQUEST] }, BAD_REQUEST);
   }
 
   const S3 = new AWS.S3({ region: REGION });
-  const OBJECT_KEY = `uploaded/${event.querystrings.name}`;
+  const OBJECT_KEY = `uploaded/${event.queryStringParameters.name}`;
 
   const params = {
     Bucket: BUCKET,
