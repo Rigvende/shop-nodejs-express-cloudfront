@@ -15,7 +15,7 @@ export class ProductService {
 
   getProductsByIdAsync = async (client: Client, id: string) => {
     const product = await this.productRepository.getProductsById(client, id);
-    return product.rows;
+    return product.rows.length > 0 ? product.rows[0] : null;
   };
 
   addProductAsync = async (client: Client, product) => {

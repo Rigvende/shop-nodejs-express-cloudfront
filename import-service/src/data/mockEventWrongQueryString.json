@@ -1,0 +1,5 @@
+{
+  "queryStringParameters": {
+    "wrongname": "test.csv"
+  }
+}

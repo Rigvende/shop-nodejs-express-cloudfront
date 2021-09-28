@@ -14,6 +14,7 @@ export const validateProduct = (product: IProduct) => {
     [key: string]: {
       type: string;
       required: boolean;
+      quantityCheck?: boolean;
       validator?: (prop: any) => boolean
     }
   } = {
@@ -27,10 +28,12 @@ export const validateProduct = (product: IProduct) => {
     },
     price: {
       type: 'number',
+      quantityCheck: true,
       required: true,
     },
     count: {
       type: 'number',
+      quantityCheck: true,
       required: true,
     },
     url: {
@@ -42,7 +45,7 @@ export const validateProduct = (product: IProduct) => {
   const validationErrors = [];
 
   for (let [key, validationProps] of Object.entries(productProps)) {
-    const { type, required, validator } = validationProps;
+    const { type, required, quantityCheck, validator } = validationProps;
     const incomingValue = product[key];
 
     if (!incomingValue) {
@@ -55,6 +58,13 @@ export const validateProduct = (product: IProduct) => {
     if (typeof incomingValue !== type) {
       validationErrors.push(key);
       continue;
+    }
+
+    if (quantityCheck) {
+      if (incomingValue < 0) {
+        validationErrors.push(key);
+        continue;
+      }
     }
 
     if (validator) {

@@ -1,7 +1,6 @@
 import type { AWS } from '@serverless/typescript';
-import getProductsList from '@functions/getProductsList';
-import getProductsById from '@functions/getProductsById';
-import addProduct from '@functions/addProduct';
+import importProductsFile from '@functions/importProductsFile';
+import importFileParser from '@functions/importFileParser';
 import dotenv from 'dotenv';
 
 dotenv.config({
@@ -9,7 +8,7 @@ dotenv.config({
 });
 
 const serverlessConfiguration: AWS = {
-  service: 'product-service',
+  service: 'import-service',
   frameworkVersion: '2',
   useDotenv: true,
   custom: {
@@ -29,15 +28,22 @@ const serverlessConfiguration: AWS = {
     },
     environment: {
       AWS_NODEJS_CONNECTION_REUSE_ENABLED: '1',
-      PG_HOST: '${env:PG_HOST}',
-      PG_PORT: '${env:PG_PORT}',
-      PG_DATABASE: '${env:PG_DATABASE}',
-      PG_USERNAME: '${env:PG_USERNAME}',
-      PG_PASSWORD: '${env:PG_PASSWORD}'
     },
     lambdaHashingVersion: '20201221',
+    iamRoleStatements: [
+      {
+        Effect: 'Allow',
+        Action: ['s3:ListBucket'],
+        Resource: ["arn:aws:s3:::my-bucket-for-toys-store"],
+      },
+      {
+        Effect: 'Allow',
+        Action: ['s3:*'],
+        Resource: ["arn:aws:s3:::my-bucket-for-toys-store/*"],
+      }
+    ]
   },
-  functions: { getProductsList, getProductsById, addProduct },
+  functions: { importProductsFile, importFileParser },
 };
 
 module.exports = serverlessConfiguration;
