@@ -2,6 +2,7 @@ import type { AWS } from '@serverless/typescript';
 import getProductsList from '@functions/getProductsList';
 import getProductsById from '@functions/getProductsById';
 import addProduct from '@functions/addProduct';
+import catalogBatchProcess from '@functions/catalogBatchProcess';
 import dotenv from 'dotenv';
 
 dotenv.config({
@@ -27,17 +28,70 @@ const serverlessConfiguration: AWS = {
       minimumCompressionSize: 1024,
       shouldStartNameWithService: true,
     },
+    iamRoleStatements: [
+      {
+        Effect: 'Allow',
+        Action: ['sns:*'],
+        Resource: {
+          Ref: 'SNSTopic'
+        }
+      }
+    ],
     environment: {
       AWS_NODEJS_CONNECTION_REUSE_ENABLED: '1',
       PG_HOST: '${env:PG_HOST}',
       PG_PORT: '${env:PG_PORT}',
       PG_DATABASE: '${env:PG_DATABASE}',
       PG_USERNAME: '${env:PG_USERNAME}',
-      PG_PASSWORD: '${env:PG_PASSWORD}'
+      PG_PASSWORD: '${env:PG_PASSWORD}',
+      SNS_TOPIC_ARN: {
+        Ref: 'SNSTopic'
+      },
     },
     lambdaHashingVersion: '20201221',
   },
-  functions: { getProductsList, getProductsById, addProduct },
+  resources: {
+    Resources: {
+      SNSTopic: {
+        Type: 'AWS::SNS::Topic',
+        Properties: {
+          TopicName: 'catalog-items-sns-topic'
+        }
+      },
+      SingleAdditionSubscription: {
+        Type: 'AWS::SNS::Subscription',
+        Properties: {
+          Protocol: 'email',
+          Endpoint: '${env:SNS_EMAIL_SINGLE}',
+          TopicArn: {
+            Ref: 'SNSTopic'
+          },
+          FilterPolicy: {
+            productsCount: [{ numeric: ['=', 1] }]
+          }
+        }
+      },
+      MultipleAdditionSubscription: {
+        Type: 'AWS::SNS::Subscription',
+        Properties: {
+          Protocol: 'email',
+          Endpoint: '${env:SNS_EMAIL_MULT}',
+          TopicArn: {
+            Ref: 'SNSTopic'
+          },
+          FilterPolicy: {
+            productsCount: [{ numeric: ['>', 1] }]
+          }
+        }
+      }
+    }
+  },
+  functions: { 
+    getProductsList, 
+    getProductsById, 
+    addProduct, 
+    catalogBatchProcess 
+  },
 };
 
 module.exports = serverlessConfiguration;

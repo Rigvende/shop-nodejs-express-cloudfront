@@ -13,6 +13,7 @@
     "@middy/core": "^1.5.2",
     "@middy/http-json-body-parser": "^1.5.2",
     "@types/pg": "^8.6.1",
+    "aws-sdk": "^2.989.0",
     "dotenv": "^10.0.0",
     "pg": "^8.7.1",
     "source-map-support": "^0.5.19"
