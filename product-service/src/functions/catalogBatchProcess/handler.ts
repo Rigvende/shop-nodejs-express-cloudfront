@@ -37,7 +37,7 @@ export const catalogBatchProcess = async (event) => {
     await SNS.publish(snsMessage).promise();
 
     return addProductsResult.newProducts.length === Records.length
-      ? formatJSONResponse(snsMessage, SUCCESS)
+      ? formatJSONResponse({ snsMessage, newProducts: addProductsResult.newProducts }, SUCCESS)
       : formatJSONResponse({ message: responseMessages[BAD_REQUEST] }, BAD_REQUEST);
   } catch (e) {
     return formatJSONResponse({ message: responseMessages[INTERNAL_SERVER_ERROR] }, INTERNAL_SERVER_ERROR);
