@@ -29,7 +29,7 @@ const serverlessConfiguration: AWS = {
     environment: {
       AWS_NODEJS_CONNECTION_REUSE_ENABLED: '1',
       SQS_URL: {
-        Ref: 'SQSQueue'
+        Ref: 'catalogItemsQueue'
       }
     },
     lambdaHashingVersion: '20201221',
@@ -48,7 +48,7 @@ const serverlessConfiguration: AWS = {
         Effect: 'Allow',
         Action: ['sqs:*'],
         Resource: {
-          'Fn::GetAtt': ['SQSQueue', 'Arn']
+          'Fn::GetAtt': ['catalogItemsQueue', 'Arn']
         }
       }
     ]
@@ -57,7 +57,7 @@ const serverlessConfiguration: AWS = {
     Outputs: {
       SQSArn: {
         Value: {
-          'Fn::GetAtt': ['SQSQueue', 'Arn']
+          'Fn::GetAtt': ['catalogItemsQueue', 'Arn']
         },
         Export: {
           Name: 'SQSArn'
@@ -65,10 +65,10 @@ const serverlessConfiguration: AWS = {
       }
     },
     Resources: {
-      SQSQueue: {
+      catalogItemsQueue: {
         Type: 'AWS::SQS::Queue',
         Properties: {
-          QueueName: 'catalogItemsQueue'
+          QueueName: 'catalog-items-queue-toys-store'
         }
       }
     }

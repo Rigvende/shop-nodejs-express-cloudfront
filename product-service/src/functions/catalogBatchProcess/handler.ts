@@ -20,7 +20,7 @@ export const catalogBatchProcess = async (event) => {
     Message: `Added ${Records.length} product(s) in DB`,
     TopicArn: SNS_TOPIC,
     MessageAttributes: {
-      productsCount: {
+      count: {
         DataType: 'Number',
         StringValue: `${Records.length}`
       }

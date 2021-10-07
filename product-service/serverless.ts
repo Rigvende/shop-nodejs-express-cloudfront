@@ -33,7 +33,7 @@ const serverlessConfiguration: AWS = {
         Effect: 'Allow',
         Action: ['sns:*'],
         Resource: {
-          Ref: 'SNSTopic'
+          Ref: 'createProductTopic'
         }
       }
     ],
@@ -45,17 +45,17 @@ const serverlessConfiguration: AWS = {
       PG_USERNAME: '${env:PG_USERNAME}',
       PG_PASSWORD: '${env:PG_PASSWORD}',
       SNS_TOPIC: {
-        Ref: 'SNSTopic'
+        Ref: 'createProductTopic'
       },
     },
     lambdaHashingVersion: '20201221',
   },
   resources: {
     Resources: {
-      SNSTopic: {
+      createProductTopic: {
         Type: 'AWS::SNS::Topic',
         Properties: {
-          TopicName: 'createProductTopic'
+          TopicName: 'create-product-topic-toys-store'
         }
       },
       SingleAdditionSubscription: {
@@ -64,10 +64,10 @@ const serverlessConfiguration: AWS = {
           Protocol: 'email',
           Endpoint: '${env:SNS_EMAIL_SINGLE}',
           TopicArn: {
-            Ref: 'SNSTopic'
+            Ref: 'createProductTopic'
           },
           FilterPolicy: {
-            productsCount: [{ numeric: ['=', 1] }]
+            count: [{ numeric: ['=', 1] }]
           }
         }
       },
@@ -77,10 +77,10 @@ const serverlessConfiguration: AWS = {
           Protocol: 'email',
           Endpoint: '${env:SNS_EMAIL_MULT}',
           TopicArn: {
-            Ref: 'SNSTopic'
+            Ref: 'createProductTopic'
           },
           FilterPolicy: {
-            productsCount: [{ numeric: ['>', 1] }]
+            count: [{ numeric: ['>', 1] }]
           }
         }
       }
