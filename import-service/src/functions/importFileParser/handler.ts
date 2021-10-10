@@ -7,12 +7,13 @@ import { responseMessages } from '../../constants/responseMessages';
 import AWS from 'aws-sdk';
 import CSV from 'csv-parser';
 
-const { BUCKET, REGION } = process.env;
+const { BUCKET, REGION, SQS_URL } = process.env;
 
 const importFileParser = async (event) => {
   log(event);
 
   const S3 = new AWS.S3({ region: REGION });
+  const SQS = new AWS.SQS({ region: REGION });
 
   try {
     for (const record of event.Records) {
@@ -28,10 +29,19 @@ const importFileParser = async (event) => {
 
       s3ReadStream
         .pipe(CSV())
-        .on('data', (chunk) => {
-          log(`Next chunk received: ${JSON.stringify(chunk)}`);
+        .on('data', async chunk => {
+          const messageChunk = JSON.stringify(chunk);
+
+          log(`Next chunk received: ${messageChunk}`);
+
+          const messageParams = {
+            QueueUrl: SQS_URL,
+            MessageBody: messageChunk
+          };
+
+          await SQS.sendMessage(messageParams).promise();
         })
-        .on('error', (e) => {
+        .on('error', e => {
           throw new Error(`Error occured: ${e}`);
         })
         .on('end', async () => {

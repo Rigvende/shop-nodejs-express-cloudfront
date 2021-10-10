@@ -28,6 +28,9 @@ const serverlessConfiguration: AWS = {
     },
     environment: {
       AWS_NODEJS_CONNECTION_REUSE_ENABLED: '1',
+      SQS_URL: {
+        Ref: 'catalogItemsQueue'
+      }
     },
     lambdaHashingVersion: '20201221',
     iamRoleStatements: [
@@ -40,8 +43,35 @@ const serverlessConfiguration: AWS = {
         Effect: 'Allow',
         Action: ['s3:*'],
         Resource: ["arn:aws:s3:::my-bucket-for-toys-store/*"],
+      },
+      {
+        Effect: 'Allow',
+        Action: ['sqs:*'],
+        Resource: {
+          'Fn::GetAtt': ['catalogItemsQueue', 'Arn']
+        }
       }
     ]
+  },
+  resources: {
+    Outputs: {
+      SQSArn: {
+        Value: {
+          'Fn::GetAtt': ['catalogItemsQueue', 'Arn']
+        },
+        Export: {
+          Name: 'SQSArn'
+        }
+      }
+    },
+    Resources: {
+      catalogItemsQueue: {
+        Type: 'AWS::SQS::Queue',
+        Properties: {
+          QueueName: 'catalog-items-queue-toys-store'
+        }
+      }
+    }
   },
   functions: { importProductsFile, importFileParser },
 };
