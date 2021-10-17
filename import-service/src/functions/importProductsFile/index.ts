@@ -7,14 +7,21 @@ export default {
       http: {
         method: 'get',
         path: 'import',
-        cors: true,          
+        cors: true,
+        authorizer: {
+          name: 'basicAuthorizer',
+          arn: "arn:aws:lambda:#(AWS::Region):#(AWS::AccountId):function:toys-store-token-authorizer",
+          resultTtlInSeconds: 0,
+          identitySource: 'method.request.header.Authorization',
+          type: 'token'
+        },
         request: {
           parameters: {
             querystrings: {
-              name: true             
-            }            
-          }              
-        }            
+              name: true
+            }
+          }
+        }
       }
     }
   ]
