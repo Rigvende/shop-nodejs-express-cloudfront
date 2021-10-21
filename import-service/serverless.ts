@@ -1,4 +1,5 @@
 import type { AWS } from '@serverless/typescript';
+import { formatGatewayResponse } from '@libs/apiGateway';
 import importProductsFile from '@functions/importProductsFile';
 import importFileParser from '@functions/importFileParser';
 import dotenv from 'dotenv';
@@ -17,7 +18,7 @@ const serverlessConfiguration: AWS = {
       includeModules: true,
     },
   },
-  plugins: ['serverless-webpack', 'serverless-pseudo-parameters'],
+  plugins: ['serverless-webpack', 'serverless-dotenv-plugin', 'serverless-pseudo-parameters'],
   provider: {
     name: 'aws',
     runtime: 'nodejs14.x',
@@ -70,7 +71,17 @@ const serverlessConfiguration: AWS = {
         Properties: {
           QueueName: 'catalog-items-queue-toys-store'
         }
-      }
+      },
+      ApiGatewayRestApi: {
+        Type: "AWS::ApiGateway::RestApi",
+        Properties: {
+          Name: {
+            "Fn::Sub": "${AWS::StackName}",
+          },
+        },
+      },
+      ResponseUnauthorized: formatGatewayResponse("UNAUTHORIZED"),
+      ResponseAccessDenied: formatGatewayResponse("ACCESS_DENIED"),
     }
   },
   functions: { importProductsFile, importFileParser },

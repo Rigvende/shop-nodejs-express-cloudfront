@@ -1,6 +1,6 @@
 import { OK } from '../constants/responseCodes';
 
-const HEADERS = {
+const JSON_HEADERS = {
   "Access-Control-Allow-Headers": "*",
   "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Methods": "*",
@@ -10,7 +10,7 @@ const HEADERS = {
 export const formatJSONResponse = (response: Record<string, unknown>, code: number = OK) => {
   return {
     statusCode: code,
-    headers: HEADERS,
+    headers: JSON_HEADERS,
     body: JSON.stringify(response)
   }
 }
