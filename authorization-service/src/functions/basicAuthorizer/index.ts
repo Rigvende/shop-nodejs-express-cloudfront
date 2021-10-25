@@ -6,7 +6,7 @@ export default {
     {
       http: {
         method: 'get',
-        path: 'import',
+        path: 'token',
         cors: true,
         authorizer: {
           name: 'basicAuthorizer',
@@ -14,13 +14,6 @@ export default {
           resultTtlInSeconds: 0,
           identitySource: 'method.request.header.Authorization',
           type: 'token'
-        },
-        request: {
-          parameters: {
-            querystrings: {
-              name: true
-            }
-          }
         }
       }
     }
